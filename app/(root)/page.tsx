@@ -1,18 +1,20 @@
-"use client"
-import { Modal } from "@/components/ui/modal";
+"use client";
 import { UserButton } from "@clerk/nextjs";
+import { useStoreModal } from "@/hooks/use-store-modal";
+import { useEffect } from "react";
 
-export default function SetUp() {
+export default function SetupPage() {
+  const onOpen = useStoreModal((state) => state.onOpen);
+  const isOpen = useStoreModal((state) => state.isOpen);
+
+  useEffect(() => {
+    if(!isOpen){
+      onOpen();
+    }
+  }, [isOpen, onOpen]);
+
   return (
     <div className="p-4">
-      <Modal isOpen onClose={() => {}} title="Welcome to your TopMart!" description="Let's get started!">
-        <div className="p-4">
-          <h2 className="text-2xl font-semibold">Welcome to TopMart!</h2>
-          <p className="mt-2">
-            We're excited to have you join us. Let's get started by setting up your account.
-          </p>
-        </div>
-      </Modal>
        <UserButton afterSignOutUrl="/" />
     </div>
   )

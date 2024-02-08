@@ -10,9 +10,9 @@ export const StoreModal = () => {
             title="Create Store"
             description="Add a new store to your account"
             isOpen={isOpen}
-            onClose={() => onClose()}
+            onClose={onClose}
         >
-            Crete Store Form
+            Create Store Form
         </Modal>
     )
 }
