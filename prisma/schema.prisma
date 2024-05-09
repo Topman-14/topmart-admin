@@ -7,16 +7,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    String  @id @default(uuid())
-  email String  @unique
-  name  String?
-}
-
 model Store {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   name      String
   userId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model user {
+  id    String  @id
+  email String  @unique(map: "User_email_key")
+  name  String?
 }
