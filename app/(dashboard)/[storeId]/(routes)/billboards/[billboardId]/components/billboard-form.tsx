@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useState } from "react";
 import * as z from "zod";
-import { Store } from "@prisma/client"
+import { Billboard } from "@prisma/client"
 import { Trash } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,31 +26,37 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 
-interface SettingsFormProps {
-    initialData: Store;
-}
-
 const formSchema = z.object({
-    name: z.string().min(1),
+    label: z.string().min(1),
+    imageUrl: z.string().min(1),
 });
 
-type SettingsFormValues = z.infer<typeof formSchema>;
+type BillboardFormValues = z.infer<typeof formSchema>;
 
-const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
+interface BillboardFormProps {
+    initialData: Billboard | null;
+}
+
+const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
 
     const params = useParams();
     const router = useRouter();
     const origin = useOrigin();
 
-    const form = useForm<SettingsFormValues>({
+    const title = initialData ? 'Edit Billboard' : 'New Billboard'
+
+    const form = useForm<BillboardFormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData,
+        defaultValues: initialData || {
+            label: '',
+            imageUrl: ''
+        },
     });
 
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    const onSubmit = async (data: SettingsFormValues) => {
+    const onSubmit = async (data: BillboardFormValues) => {
         try {
             setLoading(true)
             console.log(data)
@@ -91,7 +97,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
         />
         <div className="flex items-center justify-between">
         <Heading
-            title="Settings"
+            title={title}
             description="Manage store preferences"
         />
         <Button 
@@ -109,12 +115,12 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
               <div className="grid grid-cols-3 gap-8">
                 <FormField 
                     control={form.control} 
-                    name="name"
+                    name="label"
                     render={({field}) => (
                     <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>Label</FormLabel>
                         <FormControl>
-                            <Input disabled={loading} placeholder="Store name" {...field}/>
+                            <Input disabled={loading} placeholder="Label" {...field}/>
                         </FormControl>
                         <FormMessage />
                     </FormItem>)}
@@ -139,4 +145,4 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
   )
 }
 
-export default SettingsForm
+export default BillboardForm
