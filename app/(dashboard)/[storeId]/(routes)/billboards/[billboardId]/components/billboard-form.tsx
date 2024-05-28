@@ -25,6 +25,7 @@ import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
+import ImageUpload from "@/components/ui/image-upload";
 
 const formSchema = z.object({
     label: z.string().min(1),
@@ -43,7 +44,14 @@ const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
     const router = useRouter();
     const origin = useOrigin();
 
+    
+    const [open, setOpen] = useState(false)
+    const [loading, setLoading] = useState(false)
+    
     const title = initialData ? 'Edit Billboard' : 'New Billboard'
+    const description = initialData ? 'Edit a Billboard' : 'Add a new Billboard'
+    const toastMessage = initialData ? 'Billboard updated' : 'Billboard created'
+    const action = initialData ? 'Save Changes' : 'Create'
 
     const form = useForm<BillboardFormValues>({
         resolver: zodResolver(formSchema),
@@ -52,9 +60,6 @@ const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
             imageUrl: ''
         },
     });
-
-    const [open, setOpen] = useState(false)
-    const [loading, setLoading] = useState(false)
 
     const onSubmit = async (data: BillboardFormValues) => {
         try {
@@ -98,20 +103,37 @@ const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
         <div className="flex items-center justify-between">
         <Heading
             title={title}
-            description="Manage store preferences"
+            description={description}
         />
-        <Button 
+       {initialData && (<Button 
             disabled={loading}
             variant={"destructive"}
             size={'icon'}
             onClick={()=> setOpen(true)}
         >
-            <Trash className="size-4"/>
-        </Button>
+         <Trash className="size-4"/>
+        </Button>)}
         </div>
         <Separator />
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+            <FormField 
+                    control={form.control} 
+                    name="imageUrl"
+                    render={({field}) => (
+                    <FormItem>
+                        <FormLabel>Background image</FormLabel>
+                        <FormControl>
+                           <ImageUpload 
+                                disabled={loading}
+                                onChange={(url) => field.onChange(url)}
+                                onRemove={() => field.onChange('')}
+                                value={field.value? [field.value] : []}
+                            />
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>)}
+                 />
               <div className="grid grid-cols-3 gap-8">
                 <FormField 
                     control={form.control} 
@@ -120,7 +142,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
                     <FormItem>
                         <FormLabel>Label</FormLabel>
                         <FormControl>
-                            <Input disabled={loading} placeholder="Label" {...field}/>
+                            <Input disabled={loading} placeholder="Billboard Label" {...field}/>
                         </FormControl>
                         <FormMessage />
                     </FormItem>)}
@@ -131,16 +153,11 @@ const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
                 type="submit"
                 disabled={loading}
                 >
-                Save Changes
+                {action}
               </Button>
             </form>
         </Form>
         <Separator />
-        <ApiAlert 
-            title="NEXT_PUBLIC_API_URL" 
-            description={`${origin}/api/${params.storeId}`}
-            variant='public' 
-        />
     </>
   )
 }
