@@ -10,13 +10,15 @@ interface ImageUploadProps {
     onChange: (value: string) => void;
     onRemove: (value: string) => void;
     value: string[];
+    placeholder?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
     disabled,
     onChange,
     onRemove,
-    value
+    value,
+    placeholder
 }) => {
 
     const [isMounted, setIsMounted] = useState(false);
@@ -50,7 +52,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     </div>
                     <Image
                         fill
-                        className="object-cover"
+                        className="object-cover border rounded-xl"
                         src={url}
                         alt="Image"
                     />
@@ -71,7 +73,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                         onClick={onClick}
                     >
                         <ImagePlus className="size-4 mr-2" />
-                        Upload an Image
+                        {placeholder || "Upload an Image"}
                     </Button>
                 )
             }}
