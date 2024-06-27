@@ -55,7 +55,6 @@ export const getStockCount = async (storeId: string) => {
     return stockCount;
 }
 
-
 export const getGraphData = async (storeId: string) => {
     const sales = await prismadb.order.findMany({
         where: {

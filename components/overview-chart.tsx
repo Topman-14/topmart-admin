@@ -28,7 +28,7 @@ const OverviewChart: FC<OverviewChartProps> = ({
                 fontSize={12}
                 tickFormatter={(value)=>`₦${value}`}
             />
-            <Bar dataKey="total" fill="#3498db" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="total" className="fill-primary" radius={[4, 4, 0, 0]} />
         </BarChart>
     </ResponsiveContainer>
   )

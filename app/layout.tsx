@@ -4,6 +4,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ModalProvider } from "@/providers/modal-provider";
 import { ToastProvider } from "@/providers/toast-provider";
 import "./globals.css";
+import { ThemeProvider } from "@/providers/theme-providers";
 
 const comfortaa = Comfortaa({ subsets: ["latin"] });
 
@@ -19,11 +20,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
           <body className={comfortaa.className}>
-            <ToastProvider />
-            <ModalProvider />
-            {children}
+            <ThemeProvider 
+                attribute="class"
+                defaultTheme="system"
+                enableSystem>
+                  <ToastProvider />
+                  <ModalProvider />
+                  {children}
+            </ThemeProvider>
           </body>
       </html>
     </ClerkProvider>
