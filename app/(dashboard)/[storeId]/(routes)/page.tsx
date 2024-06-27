@@ -1,9 +1,9 @@
+import OverviewChart from "@/components/overview-chart"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import Heading from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
-import prismadb from "@/lib/prismadb"
 import { currencyFormatter } from "@/lib/utils"
-import { getSalesCount, getStockCount, getTotalRevenue } from "@/services/dashService"
+import { getGraphData, getSalesCount, getStockCount, getTotalRevenue } from "@/services/dashService"
 import { CreditCard, HandCoins, Package } from "lucide-react"
 
 interface DashboardPageProps {
@@ -20,6 +20,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
     const totalRevenue = await getTotalRevenue(params.storeId);
     const salesCount = await getSalesCount(params.storeId);
     const productsCount = await getStockCount(params.storeId);
+    const graphData = await getGraphData(params.storeId);
 
 
     return (
@@ -68,6 +69,16 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
                         </CardContent>
                     </Card>
                 </div>
+                <Card className="col-span-4">
+                    <CardHeader>
+                        <CardTitle className="mb-3 font-bold">
+                            Overview
+                        </CardTitle>
+                        <CardContent className="pl-2">
+                            <OverviewChart data={graphData} />
+                        </CardContent>
+                    </CardHeader>
+                </Card>
             </div>
         </div>
     )
