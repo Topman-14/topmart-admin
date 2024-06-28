@@ -19,10 +19,10 @@ export const columns: ColumnDef<ColorColumn>[] = [
     accessorKey: "value",
     header: "Value",
     cell: ({ row }) => (
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 gap-1">
         {row.original.value}
         <div 
-          className="w-6 h-6 rounded-full border" 
+          className="w-4 h-4 rounded-full border" 
           style={{ backgroundColor: row.original.value }}
           />
       </div>
