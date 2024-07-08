@@ -147,7 +147,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
                  />
               </div>
               <Button 
-                className="font-extrabold ml-auto"
+                className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >

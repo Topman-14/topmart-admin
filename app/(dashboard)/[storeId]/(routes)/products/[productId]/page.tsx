@@ -1,5 +1,7 @@
 import prismadb from "@/lib/prismadb"
 import ProductForm from "./components/product-form"
+import toast from "react-hot-toast";
+import { notFound } from "next/navigation";
 
 const ProductPage = async ({
     params
@@ -7,14 +9,25 @@ const ProductPage = async ({
     params : { productId : string, storeId: string }
 }) => {
 
-    const product = await prismadb.product.findUnique({
-        where: {
-            id: params.productId
-        },
-        include: {
-            images: true
+    let product = null;
+
+    if (params.productId !== "new"){
+        try{
+            product = await prismadb.product.findUnique({
+                where: {
+                    id: params.productId
+                },
+                include: {
+                    images: true
+                }
+            });
+            if (!product) {
+                throw new Error("Product not found");
+            }
+        } catch (error: any) {
+            notFound();
         }
-    })
+    }
 
     const categories = await prismadb.category.findMany({
         where: {

@@ -142,7 +142,7 @@ const SizeForm: React.FC<SizeFormProps> = ({initialData}) => {
                  />
               </div>
               <Button 
-                className="font-extrabold ml-auto"
+                className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >

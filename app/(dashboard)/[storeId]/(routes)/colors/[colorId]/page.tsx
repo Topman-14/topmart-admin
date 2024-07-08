@@ -1,16 +1,28 @@
 import prismadb from "@/lib/prismadb"
 import ColorForm from "./components/color-form"
+import { notFound } from "next/navigation";
 
 const ColorPage = async ({
     params
 } : {
     params : { colorId : string }
 }) => {
-    const color = await prismadb.color.findUnique({
-        where: {
-            id: params.colorId
+    let color = null;
+
+    if (params.colorId !== "new") {
+        try {
+            color = await prismadb.color.findUnique({
+                where: {
+                    id: params.colorId
+                }
+            });
+            if (!color) {
+                throw new Error("Color not found");
+            }
+        } catch (error: any) {
+            notFound();
         }
-    })
+    }
 
     return (
         <div className="flex-col flex">

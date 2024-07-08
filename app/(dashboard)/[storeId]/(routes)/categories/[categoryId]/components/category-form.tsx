@@ -165,7 +165,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({initialData, billboards}) =>
                  />
               </div>
               <Button 
-                className="font-extrabold ml-auto"
+                className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >

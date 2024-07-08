@@ -1,5 +1,7 @@
 import prismadb from "@/lib/prismadb"
 import CategoryForm from "./components/category-form"
+import toast from "react-hot-toast";
+import { notFound } from "next/navigation";
 
 const CategoryPage = async ({
     params
@@ -7,11 +9,23 @@ const CategoryPage = async ({
     params : { categoryId : string, storeId: string }
 }) => {
 
-    const category = await prismadb.category.findUnique({
-        where: {
-            id: params.categoryId
+    let category = null;
+
+    if (params.categoryId !== "new"){
+        try {
+            category = await prismadb.category.findUnique({
+                where: {
+                    id: params.categoryId
+                }
+            })
+            if (!category) {
+                throw new Error("Category not found");
+            }
+        } catch (error: any) {
+            notFound();
         }
-    })
+    }
+
 
     const billboards = await prismadb.billboard.findMany({
         where: {

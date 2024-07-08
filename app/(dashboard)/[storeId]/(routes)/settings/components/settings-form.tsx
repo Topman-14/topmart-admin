@@ -120,7 +120,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
                  />
               </div>
               <Button 
-                className="font-extrabold ml-auto"
+                className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >
