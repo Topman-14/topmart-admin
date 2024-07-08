@@ -4,6 +4,7 @@ import { ImagePlus, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { CldUploadWidget } from "next-cloudinary";
+import { useTheme } from "next-themes"
 
 interface ImageUploadProps {
     disabled?: boolean;
@@ -20,12 +21,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     value,
     placeholder
 }) => {
+    const { resolvedTheme } = useTheme()
+
 
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
         setIsMounted(true);
-    }, []);
+
+        const element = document.querySelector('[data-test="powered-by-image"]') as HTMLElement | null;
+        if (element) {
+            element.style.display = 'none';
+        }
+
+    }, [isMounted]);
 
     const onUpload = (result: any) => {
         onChange(result.info.secure_url);
@@ -33,6 +42,22 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
     if(!isMounted){
         return null;
+    }
+
+    const widgetStyle = {
+        palette: {
+            window: resolvedTheme !== "light" ? "#030712" : "#FDFDFF",
+            sourceBg: resolvedTheme !== "light" ? "#050B2B" : "#ECEFFF",
+            tabIcon: resolvedTheme !== "light" ? "#fff" : "#6D28D9",
+            link: '#6D28D9',
+            windowBorder: '#7171D0',
+            action: "#5333FF",
+            inProgress: "#00ffcc",
+            complete: "#33ff00",
+            error: "#cc3333",
+            textDark: "#000000",
+            textLight: "#ffffff"
+        }
     }
 
   return (
@@ -59,7 +84,31 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 </div>
             ))}
         </div>
-        <CldUploadWidget onUpload={onUpload} uploadPreset="kqevkn1v" >
+        <CldUploadWidget 
+            onUpload={onUpload} 
+            uploadPreset="kqevkn1v"
+            options={{
+                sources: ['local', 'url', 'unsplash'],
+                multiple: true,
+                maxFiles: 5,
+                maxFileSize: 1000000,
+                styles: {
+                    palette: {
+                        windowBorder: "#7171D0",
+                        inactiveTabIcon: "#8E9FBF",
+                        link: "#6D28D9",
+                        action: "#5333FF",
+                        inProgress: "#00ffcc",
+                        complete: "#33ff00",
+                        error: "#cc3333",
+                        textDark: "#000000",
+                        textLight: "#ffffff",
+                        window: resolvedTheme !== "light" ? "#030712" : "#FDFDFF",
+                        sourceBg: resolvedTheme !== "light" ? "#050B2B" : "#ECEFFF",
+                        tabIcon: resolvedTheme !== "light" ? "#777" : "#6D28D9",
+                    },
+              }}}
+            >
             {({ open }) => {
                 const onClick = () => {
                     open();

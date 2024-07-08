@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Syne } from "next/font/google";
+import { syne, montserrat, comfortaa } from "./fonts";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ModalProvider } from "@/providers/modal-provider";
 import { ToastProvider } from "@/providers/toast-provider";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-providers";
-
-const syne = Syne({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Ecommerce Admin Dashboard",
@@ -21,7 +19,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-          <body className={syne.className}>
+          <body className={montserrat.className}>
             <ThemeProvider 
                 attribute="class"
                 defaultTheme="system"

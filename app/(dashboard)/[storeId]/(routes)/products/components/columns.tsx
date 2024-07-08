@@ -44,12 +44,12 @@ export const columns: ColumnDef<ProductColumn>[] = [
     accessorKey: "color",
     header: "Color",
     cell: ({ row }) => (
-      <div className="flex items-center space-x-2">
-        {row.original.color}
+      <div className="flex items-center gap-1 space-x-2">
         <div 
-          className="w-6 h-6 rounded-full border" 
+          className="w-4 h-4 rounded border" 
           style={{ backgroundColor: row.original.color }}
           />
+        {row.original.name}
       </div>
     )
   },

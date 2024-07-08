@@ -10,7 +10,7 @@ datasource db {
 
 model Store {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String   @unique()
+  name        String
   userId      String   
   sizes       Size[] @relation("StoreToSize")
   billboards  Billboard[] @relation("StoreToBillboard")
@@ -85,7 +85,9 @@ model Product {
   colorId String   @db.ObjectId
   color     Color @relation(fields: [colorId], references: [id])
   name      String
+  description      String
   price     Float
+  quantity  Int
   isFeatured Boolean @default(false)
   isArchived Boolean @default(false)
   images Image[]
