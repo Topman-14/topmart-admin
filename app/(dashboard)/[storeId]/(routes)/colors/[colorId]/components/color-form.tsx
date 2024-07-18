@@ -22,12 +22,12 @@ import {
  } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { LoadingButton } from "@/components/ui/loader-button";
+import { ColorPicker } from "@/components/ui/color-picker";
  
 const formSchema = z.object({
-    name: z.string().min(1),
-    value: z.string().min(4).regex(/^#/, {
-        message: "String must be a valid hex code"
-    }),
+    name: z.string().min(1, 'required'),
+    value: z.string().min(1, 'required'),
 });
 
 type ColorFormValues = z.infer<typeof formSchema>;
@@ -44,7 +44,7 @@ const ColorForm: React.FC<ColorFormProps> = ({initialData}) => {
     const [loading, setLoading] = useState(false)
     
     const title = initialData ? 'Edit Color' : 'Create Color'
-    const description = initialData ? 'Edit a Color' : 'Add a new Color'
+    const description = initialData ? 'Edit a Color' : 'Add a new Color to use throught your store'
     const toastMessage = initialData ? 'Color updated' : 'Color created'
     const action = initialData ? 'Save Changes' : 'Create'
 
@@ -137,24 +137,31 @@ const ColorForm: React.FC<ColorFormProps> = ({initialData}) => {
                         <FormLabel>Value</FormLabel>
                         <FormControl>
                             <div className="flex items-center gap-x-4">
-                                <Input disabled={loading} placeholder="Enter color value" {...field}/>
-                                <div 
+                                <Input disabled={loading} placeholder="red, hsl, hexcode" {...field}/>
+                                {/* <div 
                                     className="border p-4 rounded-full"
                                     style={{backgroundColor: field.value}}
-                                />
+                                /> */}
+                               <ColorPicker
+                                    onChange={(v) => {
+                                        field.onChange(v); 
+                                    }}
+                                    value={field.value}
+/>
                             </div>
                         </FormControl>
                         <FormMessage />
                     </FormItem>)}
                  />
               </div>
-              <Button 
+              <LoadingButton 
+                loading={loading}
                 className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >
                 {action}
-              </Button>
+              </LoadingButton>
             </form>
         </Form>
         <Separator />

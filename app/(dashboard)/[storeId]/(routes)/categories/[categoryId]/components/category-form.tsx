@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { LoadingButton } from "@/components/ui/loader-button";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -164,13 +165,14 @@ const CategoryForm: React.FC<CategoryFormProps> = ({initialData, billboards}) =>
                     </FormItem>)}
                  />
               </div>
-              <Button 
+              <LoadingButton
+                loading={loading} 
                 className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >
                 {action}
-              </Button>
+              </LoadingButton>
             </form>
         </Form>
         <Separator />

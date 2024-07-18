@@ -1,4 +1,4 @@
-import { raleway } from "@/app/fonts"
+import { raleway } from "@/fonts"
 interface HeadingProps {
     description: String,
     title: String

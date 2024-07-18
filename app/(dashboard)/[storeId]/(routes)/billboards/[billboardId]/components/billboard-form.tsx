@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
+import { LoadingButton } from "@/components/ui/loader-button";
 
 const formSchema = z.object({
     label: z.string().min(1),
@@ -146,13 +147,14 @@ const BillboardForm: React.FC<BillboardFormProps> = ({initialData}) => {
                     </FormItem>)}
                  />
               </div>
-              <Button 
+              <LoadingButton
                 className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
+                loading={loading}
                 >
                 {action}
-              </Button>
+              </LoadingButton>
             </form>
         </Form>
         <Separator />

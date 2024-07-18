@@ -16,6 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { 
     Form, 
     FormControl, 
+    FormDescription, 
     FormField, 
     FormItem, 
     FormLabel,
@@ -25,6 +26,8 @@ import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
+import { LoadingButton } from "@/components/ui/loader-button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface SettingsFormProps {
     initialData: Store;
@@ -32,6 +35,7 @@ interface SettingsFormProps {
 
 const formSchema = z.object({
     name: z.string().min(1),
+    isDeveloper: z.boolean(),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
@@ -105,7 +109,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
         <Separator />
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-              <div className="grid grid-cols-3 gap-8">
+              <div className="grid grid-cols-3 gap-8 items-center">
                 <FormField 
                     control={form.control} 
                     name="name"
@@ -118,14 +122,43 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
                         <FormMessage />
                     </FormItem>)}
                  />
+                 <FormField 
+                    control={form.control} 
+                    name="isDeveloper"
+                    render={({field}) => (
+                    <label className="cursor-pointer">
+                        <FormItem className={`flex overflow-hidden flex-row items-start space-x-3 space-y-0 border rounded-md p-3 ${field.value && "border-primary"}`}>
+                            <FormControl>
+                                <Checkbox
+                                    disabled={loading}
+                                    checked={field.value}
+                                    onCheckedChange={field.onChange}
+                                />
+                            </FormControl>
+                            <div className="space-y-1 leading-none">
+                                <FormLabel>Developer Mode</FormLabel>
+                                <FormDescription 
+                                    style={{
+                                            maxHeight: field.value? '100px': '0',
+                                            overflow: 'hidden',
+                                            opacity: field.value? '1': '0',
+                                        }}
+                                    className={`transition-all text-xs`}>
+                                    This will make API endpoints visible throughout the store
+                                </FormDescription>
+                            </div>
+                        </FormItem>
+                    </label>)}
+                 />
               </div>
-              <Button 
+              <LoadingButton
+                loading={loading} 
                 className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >
                 Save Changes
-              </Button>
+              </LoadingButton>
             </form>
         </Form>
         <Separator />

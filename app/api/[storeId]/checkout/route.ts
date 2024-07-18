@@ -20,11 +20,13 @@ export async function POST(
     req: Request,
     { params }: { params: { storeId: string }}
 ) {
-    const { productIds } = await req.json()
+    const { products: productRequests } = await req.json()
 
-    if(!productIds || productIds.length === 0){
-        return new NextResponse("Product Ids are required", { status: 400})
+    if (!productRequests || productRequests.length === 0) {
+        return new NextResponse("Product requests are required", { status: 400 })
     }
+
+    const productIds = productRequests.map((product: { id: string, quantity: number }) => product.id);
 
     const products = await prismadb.product.findMany({
         where: {
@@ -35,18 +37,21 @@ export async function POST(
     });
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = []
-    
+
     products.forEach((product) => {
-        line_items.push({
-            quantity: 1,
-            price_data: {
-                currency: "NGN",
-                product_data: {
-                    name: product.name,
-                },
-                unit_amount: product.price.toNumber() * 100
-            }
-        });
+        const request = productRequests.find((p: { id: string, quantity: number }) => p.id === product.id);
+        if (request) {
+            line_items.push({
+                quantity: request.quantity,
+                price_data: {
+                    currency: "NGN",
+                    product_data: {
+                        name: product.name,
+                    },
+                    unit_amount: product.price * 100
+                }
+            });
+        }
     })
 
     const order = await prismadb.order.create({
@@ -54,12 +59,13 @@ export async function POST(
             storeId: params.storeId,
             isPaid: false,
             orderItems: {
-                create: productIds.map((productId :string) => ({
+                create: productRequests.map((product: { id: string, quantity: number }) => ({
                     product: {
                         connect: { 
-                            id: productId
+                            id: product.id
                         }
-                    }
+                    },
+                    quantity: product.quantity
                 }))
             }
         }
@@ -79,5 +85,5 @@ export async function POST(
         }
     });
 
-    return NextResponse.json({ url: session.url }, { headers: corsHeaders});
+    return NextResponse.json({ url: session.url }, { headers: corsHeaders });
 }

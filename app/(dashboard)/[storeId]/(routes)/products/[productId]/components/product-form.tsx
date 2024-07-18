@@ -26,6 +26,7 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { LoadingButton } from "@/components/ui/loader-button";
 
 const requiredMsg = "This field is required" //I'm just really lazy
 
@@ -349,13 +350,13 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
                  />
                  
               </div>
-              <Button 
+              <LoadingButton 
                 className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >
                 {action}
-              </Button>
+              </LoadingButton>
             </form>
         </Form>
         <Separator />
