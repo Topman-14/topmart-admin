@@ -3,7 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { useStoreModal } from '@/hooks/use-store-modal';
 import { Store } from '@prisma/client'
 import { useParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Check, ChevronsUpDown, PlusCircle, Store as StoreIcon } from 'lucide-react'
 import { cn } from '@/lib/utils';
@@ -17,6 +17,7 @@ import {
     CommandSeparator
  } from '@/components/ui/command';
 import { set } from 'zod';
+import { useDevMode } from '@/hooks/use-dev-mode';
 
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
@@ -30,13 +31,20 @@ export default function StoreSwitcher({
     const storeModal = useStoreModal();
     const params = useParams();
     const router = useRouter();
+    const {setDev} = useDevMode();
 
     const formattedItems = items.map((item) => ({
         label: item.name,
-        value: item.id
+        value: item.id,
+        isDeveloper: item.isDeveloper
     }))
 
     const currentStore = formattedItems.find((item) => item.value === params.storeId)
+
+    useEffect(() => {
+        setDev(currentStore?.isDeveloper || false)
+    }, [])
+
 
     const [open, setOpen] = useState(false)
 
@@ -54,7 +62,7 @@ export default function StoreSwitcher({
                 role='combobox'
                 aria-expanded={open}
                 aria-label='Select a store'
-                className={cn('w-[200px] justify-between', className)}
+                className={cn('w-[200px] h-10 justify-between', className)}
             >
                 <StoreIcon className='mr-2 h-4 w-4'/>
                  {currentStore?.label}

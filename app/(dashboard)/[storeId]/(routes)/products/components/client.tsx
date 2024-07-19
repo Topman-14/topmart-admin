@@ -19,7 +19,7 @@ export const ProductClient: React.FC<ProductClientProps> = ({ data }) =>{
 
     return(
         <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
                 <Heading
                     title={`Products (${data.length})`}
                     description="Manage store products"
@@ -31,8 +31,6 @@ export const ProductClient: React.FC<ProductClientProps> = ({ data }) =>{
             </div>
             <Separator />
             <DataTable searchKey="name" columns={columns} data={data}/>
-            <Heading title="API" description={"API calls for Products"} />
-            <Separator />
             <ApiList entityName="products" entityIdName="productId"/>
         </>
     )

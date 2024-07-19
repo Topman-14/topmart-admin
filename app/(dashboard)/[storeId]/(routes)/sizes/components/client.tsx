@@ -19,7 +19,7 @@ export const SizeClient: React.FC<SizeClientProps> = ({ data }) =>{
 
     return(
         <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
                 <Heading
                     title={`Sizes (${data.length})`}
                     description="Manage store sizes"
@@ -31,8 +31,6 @@ export const SizeClient: React.FC<SizeClientProps> = ({ data }) =>{
             </div>
             <Separator />
             <DataTable searchKey="name" columns={columns} data={data}/>
-            <Heading title="API" description={"API calls for Sizes"} />
-            <Separator />
             <ApiList entityName="sizes" entityIdName="sizeId"/>
         </>
     )

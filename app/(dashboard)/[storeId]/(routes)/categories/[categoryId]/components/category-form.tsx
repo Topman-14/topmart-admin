@@ -117,7 +117,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({initialData, billboards}) =>
         <Separator />
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-              <div className="grid grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                 <FormField 
                     control={form.control} 
                     name="name"

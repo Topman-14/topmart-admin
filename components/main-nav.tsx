@@ -2,7 +2,12 @@
 import { cn } from '@/lib/utils'
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation'
-import React from 'react'
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
+import { Button } from './ui/button';
+import { Menu } from 'lucide-react';
+import { Separator } from './ui/separator';
+import { Fragment } from 'react';
+
 
 export default function MainNav({
     className,
@@ -55,19 +60,52 @@ export default function MainNav({
   ]
   
   return (
-    <nav
-      className={cn("flex item-center space-x-4 lg:space-x-6", className)}
-    >
-      {routes.map((route) => (
-        <Link 
-          href={route.href}
-          key={route.href}
-          className={cn('text-sm font-medium transition-colors hover:text-primary', 
-          route.active ? 'text-primary font-bold dark:text-white' : 'text-muted-foreground')}
-          >
-            {route.label}
-        </Link>
-      ))}
-    </nav>
+    <>
+      <Sheet>
+        <SheetTrigger asChild>
+          <Button variant="outline" className="lg:hidden py-0 px-2 mx-2">
+            <Menu className="size-5"/>
+          </Button>
+        </SheetTrigger>
+        <SheetContent side={'right'}>
+          <SheetHeader>
+            <SheetTitle>
+              Menu
+            </SheetTitle>
+          </SheetHeader>
+          <div className='flex flex-col gap-5 text-right mt-8'>
+              {routes.map((route) => (
+                <Fragment key={route.href}>
+                    <Link 
+                      href={route.href}
+                      className={cn('text-sm font-medium transition-colors hover:text-primary', 
+                      route.active ? 'text-primary font-bold dark:text-white' : 'text-muted-foreground')}
+                      >
+                        <SheetClose className='text-right'>
+                          {route.label}
+                        </SheetClose>
+                    </Link>
+                  <Separator />
+                </Fragment>
+            ))}
+          </div>
+        </SheetContent>
+        <SheetDescription className='hidden'>Menu</SheetDescription>
+      </Sheet>
+      <nav
+        className={cn("hidden item-center space-x-4 lg:space-x-6 lg:flex", className)}
+      >
+        {routes.map((route) => (
+          <Link 
+            href={route.href}
+            key={route.href}
+            className={cn('text-sm font-medium transition-colors hover:text-primary', 
+            route.active ? 'text-primary font-bold dark:text-white' : 'text-muted-foreground')}
+            >
+              {route.label}
+          </Link>
+        ))}
+      </nav>
+    </>
   )
 }

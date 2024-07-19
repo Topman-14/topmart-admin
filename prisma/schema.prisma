@@ -81,10 +81,10 @@ model Product {
   store     Store @relation("StoreToProduct", fields: [storeId], references: [id])
   categoryId      String   @db.ObjectId
   category     Category @relation("CategoryToProduct", fields: [categoryId], references: [id])
-  sizeId    String   @db.ObjectId
-  size     Size @relation(fields: [sizeId], references: [id])
-  colorId String   @db.ObjectId
-  color     Color @relation(fields: [colorId], references: [id])
+  sizeId    String?  @db.ObjectId
+  size      Size?     @relation(fields: [sizeId], references: [id])
+  colorId   String?  @db.ObjectId
+  color     Color?    @relation(fields: [colorId], references: [id])
   name      String
   description      String
   price     Float

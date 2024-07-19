@@ -19,7 +19,7 @@ export const ColorClient: React.FC<ColorClientProps> = ({ data }) =>{
 
     return(
         <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
                 <Heading
                     title={`Colors (${data.length})`}
                     description="Manage store colors"
@@ -31,8 +31,6 @@ export const ColorClient: React.FC<ColorClientProps> = ({ data }) =>{
             </div>
             <Separator />
             <DataTable searchKey="name" columns={columns} data={data}/>
-            <Heading title="API" description={"API calls for Colors"} />
-            <Separator />
             <ApiList entityName="colors" entityIdName="colorId"/>
         </>
     )

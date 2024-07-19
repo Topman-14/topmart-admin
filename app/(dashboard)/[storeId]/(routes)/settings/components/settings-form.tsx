@@ -28,6 +28,7 @@ import { ApiAlert } from "@/components/ui/api-alert";
 import { useOrigin } from "@/hooks/use-origin";
 import { LoadingButton } from "@/components/ui/loader-button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useDevMode } from "@/hooks/use-dev-mode";
 
 interface SettingsFormProps {
     initialData: Store;
@@ -45,6 +46,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
     const params = useParams();
     const router = useRouter();
     const origin = useOrigin();
+    const {setDev, isDev} = useDevMode();
 
     const form = useForm<SettingsFormValues>({
         resolver: zodResolver(formSchema),
@@ -58,6 +60,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
         try {
             setLoading(true)
             await axios.patch(`/api/stores/${params.storeId}`, data)
+            setDev(data.isDeveloper)
             router.refresh();
             toast.success('Store updated!')
         } catch (error) {
@@ -109,7 +112,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
         <Separator />
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-              <div className="grid grid-cols-3 gap-8 items-center">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6 items-end">
                 <FormField 
                     control={form.control} 
                     name="name"
@@ -136,7 +139,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
                                 />
                             </FormControl>
                             <div className="space-y-1 leading-none">
-                                <FormLabel>Developer Mode</FormLabel>
+                                <FormLabel>Dev Mode</FormLabel>
                                 <FormDescription 
                                     style={{
                                             maxHeight: field.value? '100px': '0',
@@ -162,11 +165,11 @@ const SettingsForm: React.FC<SettingsFormProps> = ({initialData}) => {
             </form>
         </Form>
         <Separator />
-        <ApiAlert 
+        {isDev && <ApiAlert 
             title="NEXT_PUBLIC_API_URL" 
             description={`${origin}/api/${params.storeId}`}
             variant='public' 
-        />
+        />}
     </>
   )
 }

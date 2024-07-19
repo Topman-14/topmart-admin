@@ -9,7 +9,8 @@ export type ProductColumn = {
   price: string;
   size: string;
   category: string;
-  color: string;
+  color: string | null;
+  quantity: number;
   isFeatured: boolean;
   isArchived: boolean;
   createdAt: string;
@@ -19,6 +20,11 @@ export const columns: ColumnDef<ProductColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
+    cell: ({ row }) => (
+      <div className="min-w-32">
+        {row.original?.name}
+      </div>
+    )
   },
   {
     accessorKey: "isArchived",
@@ -33,6 +39,15 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: "Price",
   },
   {
+    accessorKey: "quantity",
+    header: "Quantity",
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.original.quantity}
+      </div>
+    )
+  },
+  {
     accessorKey: "size",
     header: "Size",
   },
@@ -45,17 +60,20 @@ export const columns: ColumnDef<ProductColumn>[] = [
     header: "Color",
     cell: ({ row }) => (
       <div className="flex items-center gap-1 space-x-2">
-        <div 
-          className="w-4 h-4 rounded border" 
-          style={{ backgroundColor: row.original.color }}
-          />
-        {row.original.name}
+        {row.original?.color ? 
+          <>
+            <div 
+              className="w-4 h-4 rounded border" 
+              style={{ backgroundColor: row.original.color.split(':')[0] }}
+              />
+            {row.original.color.split(':')[1]}
+          </> : '-'}
       </div>
     )
   },
   {
     accessorKey: "createdAt",
-    header: "Date",
+    header: "Date Added",
   },
   {
     id: "actions",

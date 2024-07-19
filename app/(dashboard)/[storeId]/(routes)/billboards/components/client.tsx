@@ -19,7 +19,7 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({ data }) =>{
 
     return(
         <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
                 <Heading
                     title={`Billboards (${data.length})`}
                     description="Manage store billboards"
@@ -31,8 +31,6 @@ export const BillboardClient: React.FC<BillboardClientProps> = ({ data }) =>{
             </div>
             <Separator />
             <DataTable searchKey="label" columns={columns} data={data}/>
-            <Heading title="API" description={"API calls for Billbords"} />
-            <Separator />
             <ApiList entityName="billboards" entityIdName="billboardId"/>
         </>
     )

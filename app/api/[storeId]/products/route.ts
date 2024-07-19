@@ -16,6 +16,8 @@ export async function POST(
             colorId,
             sizeId,
             images,
+            quantity,
+            description,
             isFeatured,
             isArchived
          } = body;
@@ -58,6 +60,8 @@ export async function POST(
                 categoryId,
                 colorId,
                 sizeId,
+                quantity,
+                description,
                 storeId: params.storeId,
                 images: {
                     createMany: {

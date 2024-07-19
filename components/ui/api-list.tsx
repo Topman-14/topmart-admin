@@ -3,6 +3,9 @@
 import { useOrigin } from "@/hooks/use-origin";
 import { useParams } from "next/navigation";
 import { ApiAlert } from "./api-alert";
+import { useDevMode } from "@/hooks/use-dev-mode";
+import Heading from "./heading";
+import { Separator } from "./separator";
 
 interface ApiListProps {
     entityName: string;
@@ -14,10 +17,15 @@ export const ApiList: React.FC<ApiListProps> = ({
 }) =>{
     const params = useParams();
     const origin = useOrigin();
+    const {isDev} = useDevMode();
 
     const baseUrl = `${origin}/api/${params.storeId}`
+
+    if(isDev){
     return (
-        <>
+        <> 
+            <Heading title="API" description={"API calls for " + entityName} />
+            <Separator />
             <ApiAlert
                 title="GET"
                 variant="public"
@@ -44,5 +52,8 @@ export const ApiList: React.FC<ApiListProps> = ({
                 description={`${baseUrl}/${entityName}/{${entityName}}`}
              />
         </>
-    )
+      )
+    } else {
+        return null
+    }
 }
