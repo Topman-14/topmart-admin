@@ -26,16 +26,20 @@ import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { LoadingButton } from "@/components/ui/loader-button";
+import { Textarea } from "@/components/ui/textarea";
 
-const requiredMsg = "This field is required" //I'm just really lazy
+const requiredMsg = "This field is required" //I'm just really lazy rn
 
 const formSchema = z.object({
-    name: z.string().min(1),
+    name: z.string().min(1, requiredMsg),
     images: z.object({url: z.string()}).array().min(1, "Please upload at least one image"),
     price: z.coerce.number().min(1, requiredMsg),
     categoryId: z.string().min(1, requiredMsg),
-    colorId: z.string().min(1, requiredMsg),
-    sizeId: z.string().min(1, requiredMsg),
+    colorId: z.string().optional(),
+    sizeId: z.string().optional(),
+    description: z.string().min(1, requiredMsg),
+    quantity: z.coerce.number().min(0, requiredMsg),
     isFeatured: z.boolean().default(false).optional(),
     isArchived: z.boolean().default(false).optional()
 });
@@ -68,12 +72,16 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
         defaultValues: initialData ? {
                 ...initialData,
                 price: parseFloat(String(initialData?.price)),
+                colorId: initialData.colorId ?? undefined,
+                sizeId: initialData.sizeId ?? undefined,
         } : {
             name: '',
             images: [],
             price: 0,
-            categoryId: '',
-            sizeId: '',
+            colorId: undefined,
+            sizeId: undefined,
+            description: '',
+            quantity: 1,
             isFeatured: false,
             isArchived: false,
         },
@@ -157,7 +165,7 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
                         <FormMessage />
                     </FormItem>)}
                  />
-              <div className="grid grid-cols-3 items-end gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 items-end gap-6">
                 <FormField 
                     control={form.control} 
                     name="name"
@@ -183,6 +191,19 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
                         <FormMessage />
                     </FormItem>)}
                  />
+
+                <FormField 
+                    control={form.control} 
+                    name="quantity"
+                    render={({field}) => (
+                    <FormItem>
+                        <FormLabel>Quantity In Stock</FormLabel>
+                        <FormControl>
+                            <Input disabled={loading} placeholder="Enter quantity" type="number" {...field}/>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>)}
+                />
 
                 <FormField 
                     control={form.control} 
@@ -224,7 +245,7 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
                     name="sizeId"
                     render={({field}) => (
                     <FormItem>
-                        <FormLabel>Size</FormLabel>
+                        <FormLabel>Size (optional)</FormLabel>
                            <Select 
                                 disabled={loading} 
                                 onValueChange={field.onChange} 
@@ -259,7 +280,7 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
                     name="colorId"
                     render={({field}) => (
                     <FormItem>
-                        <FormLabel>Colors</FormLabel>
+                        <FormLabel>Color (optional)</FormLabel>
                            <Select 
                                 disabled={loading} 
                                 onValueChange={field.onChange} 
@@ -288,6 +309,23 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
                         <FormMessage />
                     </FormItem>)}
                  />
+
+                 <FormField 
+                    control={form.control} 
+                    name="description"
+                    render={({field}) => (
+                    <FormItem
+                        className="col-span-2 md:col-span-3"
+                    >
+                        <FormLabel>Description</FormLabel>
+                        <FormControl>
+                            <Textarea 
+                            className="min-h-36"
+                            disabled={loading} placeholder="Enter product description" {...field}/>
+                        </FormControl>
+                        <FormMessage />
+                    </FormItem>)}
+                />
 
                 <FormField 
                     control={form.control} 
@@ -349,13 +387,14 @@ const ProductForm: React.FC<ProductFormProps> = ({initialData, sizes, colors, ca
                  />
                  
               </div>
-              <Button 
+              <LoadingButton 
                 className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
+                loading={loading}
                 >
                 {action}
-              </Button>
+              </LoadingButton>
             </form>
         </Form>
         <Separator />

@@ -4,6 +4,8 @@ import { OrderClient } from "./components/client"
 import { OrderColumn } from "./components/columns"
 import { currencyFormatter } from "@/lib/utils"
 
+export const revalidate = 300
+
 const OrdersPage = async ({ params }: {
   params: { storeId: string }
 }) => {
@@ -31,7 +33,7 @@ const OrdersPage = async ({ params }: {
     address: item.address,
     products: item.orderItems.map(orderItem => orderItem.product.name).join(', '),
     totalPrice: currencyFormatter.format(item.orderItems.reduce((total, item) => {
-      return total + Number(item.product.price)
+      return total + (Number(item.product.price) * item?.quantity)
     }, 0)),
     isPaid: item.isPaid,
     createdAt: format(item.createdAt, "MMM do, yyyy")

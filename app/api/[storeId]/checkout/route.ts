@@ -1,8 +1,5 @@
-import { NextResponse } from 'next/server'
-import Stripe from 'stripe'
-
-import { stripe } from '@/lib/stripe'
-import prismadb from '@/lib/prismadb'
+import { NextResponse } from "next/server";
+import prismadb from "@/lib/prismadb";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
@@ -10,74 +7,73 @@ const corsHeaders = {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization'
 }
 
-const frontendUrl = process.env.FRONTEND_STORE_URL as string
-
-export async function OPTIONS(){
-    return NextResponse.json({}, { headers: corsHeaders})
-};
-
-export async function POST(
+export async function POST( 
     req: Request,
-    { params }: { params: { storeId: string }}
-) {
-    const { productIds } = await req.json()
+    { params }: { params: { storeId: string } }){
+    try{
+        const { products, metadata } = await req.json()
 
-    if(!productIds || productIds.length === 0){
-        return new NextResponse("Product Ids are required", { status: 400})
-    }
-
-    const products = await prismadb.product.findMany({
-        where: {
-            id: {
-                in: productIds
-            }
+        if (!products || products.length === 0) {
+            return new NextResponse("Product Ids are required", { status: 400, headers: corsHeaders });
         }
-    });
 
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = []
-    
-    products.forEach((product) => {
-        line_items.push({
-            quantity: 1,
-            price_data: {
-                currency: "NGN",
-                product_data: {
-                    name: product.name,
-                },
-                unit_amount: product.price.toNumber() * 100
+        if (!params.storeId) {
+            return new NextResponse('Store ID is required', { status: 400, headers: corsHeaders });
+        }
+
+        const allProducts = await prismadb.product.findMany({
+            where: {
+                id: {
+                    in: products.map((product: { id: string }) => product.id)
+                }
             }
         });
-    })
 
-    const order = await prismadb.order.create({
-        data: {
-            storeId: params.storeId,
-            isPaid: false,
-            orderItems: {
-                create: productIds.map((productId :string) => ({
-                    product: {
-                        connect: { 
-                            id: productId
-                        }
-                    }
-                }))
+        for (const product of products) {
+            const foundProduct = allProducts.find((p) => p.id === product.id);
+
+            if (!foundProduct) {
+                return new NextResponse(`A product does not exist`, { status: 404, headers: corsHeaders });
+            }
+
+            if (foundProduct.quantity < product.quantity) {
+                return new NextResponse(`${foundProduct.name} is out of stock`, { status: 400, headers: corsHeaders });
             }
         }
-    })
 
-    const session = await stripe.checkout.sessions.create({
-        line_items,
-        mode: 'payment',
-        billing_address_collection: 'required',
-        phone_number_collection: {
-            enabled: true
-        },
-        success_url: `${frontendUrl}/cart?success=1`,
-        cancel_url: `${frontendUrl}/cart?canceled=1`,
-        metadata: {
-            orderId: order.id
-        }
+        const order = await prismadb.order.create({
+            data: {
+                storeId: params.storeId,
+                isPaid: false,
+                address: metadata?.address || '',
+                phone: metadata?.phone || '',
+                email: metadata?.email || '',
+                orderItems: {
+                    create: products
+                    .map((product: { id: string, quantity: number }) => ({
+                        product: {
+                            connect: { 
+                                id: product.id
+                            }
+                        },
+                        quantity: product.quantity
+                    }))
+                }
+            }
+        })
+
+        return NextResponse.json(order, { headers: corsHeaders });
+    } catch (error) {
+        console.error('ORDERS_POST', error);
+        return new NextResponse('Internal Server Error', { 
+            headers: corsHeaders,
+            status: 500
+         });
+    }
+}
+
+export function OPTIONS() {
+    return new NextResponse(null, {
+        headers: corsHeaders
     });
-
-    return NextResponse.json({ url: session.url }, { headers: corsHeaders});
 }

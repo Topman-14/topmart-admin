@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { AlertModal } from "@/components/modals/alert-modal";
 import ImageUpload from "@/components/ui/image-upload";
+import { LoadingButton } from "@/components/ui/loader-button";
 
 const formSchema = z.object({
     name: z.string().min(1),
@@ -43,7 +44,7 @@ const SizeForm: React.FC<SizeFormProps> = ({initialData}) => {
     const [loading, setLoading] = useState(false)
     
     const title = initialData ? 'Edit Size' : 'Create Size'
-    const description = initialData ? 'Edit a Size' : 'Add a new Size'
+    const description = initialData ? 'Edit a Size' : 'Add a new Size to use throught your store'
     const toastMessage = initialData ? 'Size updated' : 'Size created'
     const action = initialData ? 'Save Changes' : 'Create'
 
@@ -115,7 +116,7 @@ const SizeForm: React.FC<SizeFormProps> = ({initialData}) => {
         <Separator />
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
-              <div className="grid grid-cols-3 gap-8">
+              <div className="grid  grid-cols-2 md:grid-cols-3 gap-6">
                 <FormField 
                     control={form.control} 
                     name="name"
@@ -141,13 +142,14 @@ const SizeForm: React.FC<SizeFormProps> = ({initialData}) => {
                     </FormItem>)}
                  />
               </div>
-              <Button 
+              <LoadingButton 
+                loading={loading}
                 className="font-semibold ml-auto"
                 type="submit"
                 disabled={loading}
                 >
                 {action}
-              </Button>
+              </LoadingButton>
             </form>
         </Form>
         <Separator />

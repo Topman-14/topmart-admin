@@ -4,6 +4,8 @@ import { ProductClient } from "./components/client"
 import { ProductColumn } from "./components/columns"
 import { currencyFormatter } from "@/lib/utils"
 
+export const revalidate = 300
+
 const ProductsPage = async ({ params }: {
   params: { storeId: string }
 }) => {
@@ -28,9 +30,10 @@ const ProductsPage = async ({ params }: {
     isFeatured: item.isFeatured,
     isArchived: item.isArchived,
     price: currencyFormatter.format(item.price),
+    quantity: item.quantity,
     category: item.category.name,
-    size: item.size.name,
-    color: item.color.value,
+    size: item.size?.name || '-',
+    color: item.color?.value ? `${item.color?.value}:${item.color?.name }` : null,
     createdAt: format(item.createdAt, "MMM do, yyyy")
   }))
 

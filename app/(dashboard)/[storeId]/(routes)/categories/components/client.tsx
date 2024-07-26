@@ -19,7 +19,7 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({ data }) =>{
 
     return(
         <>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-3 flex-wrap">
                 <Heading
                     title={`Categories (${data.length})`}
                     description="Manage store categories"
@@ -31,9 +31,7 @@ export const CategoryClient: React.FC<CategoryClientProps> = ({ data }) =>{
             </div>
             <Separator />
             <DataTable searchKey="name" columns={columns} data={data}/>
-            <Heading title="API" description={"API calls for Categories"} />
-            <Separator />
             <ApiList entityName="categories" entityIdName="categoryId"/>
         </>
-    )
+    ) 
 }

@@ -1,6 +1,5 @@
 import prismadb from "@/lib/prismadb"
 import ProductForm from "./components/product-form"
-import toast from "react-hot-toast";
 import { notFound } from "next/navigation";
 
 const ProductPage = async ({

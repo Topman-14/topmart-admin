@@ -45,14 +45,16 @@ export async function PATCH(
             sizeId,
             images,
             isFeatured,
-            isArchived
+            isArchived,
+            description,
+            quantity
          } = body;
 
         if (!userId) {
             return new NextResponse('Unauthenticated', { status: 401 });
         }
 
-        [name, price, categoryId, colorId, sizeId].forEach((field) => {
+        [name, price, categoryId, quantity].forEach((field) => {
             if (!field) {
                 return new NextResponse(`${field} is required`, { status: 400 });
             }
@@ -89,6 +91,8 @@ export async function PATCH(
                 sizeId,
                 isFeatured,
                 isArchived,
+                description,
+                quantity,
                 images: {
                     deleteMany: {}
                 }

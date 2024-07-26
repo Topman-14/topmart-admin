@@ -16,6 +16,8 @@ export async function POST(
             colorId,
             sizeId,
             images,
+            quantity,
+            description,
             isFeatured,
             isArchived
          } = body;
@@ -58,6 +60,8 @@ export async function POST(
                 categoryId,
                 colorId,
                 sizeId,
+                quantity,
+                description,
                 storeId: params.storeId,
                 images: {
                     createMany: {
@@ -85,6 +89,8 @@ export async function GET(
         const colorId = searchParams.get('colorId') || undefined;
         const sizeId = searchParams.get('sizeId') || undefined;
         const isFeatured = searchParams.get('isFeatured') || undefined;
+        const billboardId = searchParams.get('billboardId') || undefined;
+
         
         if (!params.storeId) {
             return new NextResponse('Store ID is required', { status: 400 });
@@ -93,6 +99,9 @@ export async function GET(
         const products = await prismadb.product.findMany({
             where: {
                 storeId: params.storeId,
+                category: {
+                    billboardId: billboardId,
+                },
                 categoryId,
                 colorId,
                 sizeId,

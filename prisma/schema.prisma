@@ -11,6 +11,7 @@ datasource db {
 model Store {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  isDeveloper Boolean @default(false)
   userId      String   
   sizes       Size[] @relation("StoreToSize")
   billboards  Billboard[] @relation("StoreToBillboard")
@@ -80,10 +81,10 @@ model Product {
   store     Store @relation("StoreToProduct", fields: [storeId], references: [id])
   categoryId      String   @db.ObjectId
   category     Category @relation("CategoryToProduct", fields: [categoryId], references: [id])
-  sizeId    String   @db.ObjectId
-  size     Size @relation(fields: [sizeId], references: [id])
-  colorId String   @db.ObjectId
-  color     Color @relation(fields: [colorId], references: [id])
+  sizeId    String?  @db.ObjectId
+  size      Size?     @relation(fields: [sizeId], references: [id])
+  colorId   String?  @db.ObjectId
+  color     Color?    @relation(fields: [colorId], references: [id])
   name      String
   description      String
   price     Float
@@ -121,6 +122,7 @@ model Order {
   isPaid Boolean @default(false)
   phone String @default("")
   address String @default("")
+  email String @default("")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -131,6 +133,7 @@ model OrderItem {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   orderId String   @db.ObjectId
   order Order @relation(fields: [orderId], references: [id])
+  quantity Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   productId String   @db.ObjectId
