@@ -33,7 +33,6 @@ export async function PATCH (
                 isDeveloper
             }
         });
-
         return NextResponse.json(store);
 
     } catch (error) {

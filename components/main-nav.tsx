@@ -81,7 +81,7 @@ export default function MainNav({
                       className={cn('text-sm font-medium transition-colors hover:text-primary', 
                       route.active ? 'text-primary font-bold dark:text-white' : 'text-muted-foreground')}
                       >
-                        <SheetClose className='text-right'>
+                        <SheetClose className='text-right w-full'>
                           {route.label}
                         </SheetClose>
                     </Link>

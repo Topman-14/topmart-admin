@@ -24,7 +24,7 @@ export const getTotalRevenue = async (storeId: string) => {
 
     return paidOrders.reduce((total, order) => {
         const orderTotal = order.orderItems.reduce((orderSum, item) => {
-            return orderSum + item.product.price.toNumber();
+            return orderSum + item.product.price
         }, 0);
 
         return total + orderTotal;
@@ -45,12 +45,15 @@ export const getSalesCount = async (storeId: string) => {
 
 export const getStockCount = async (storeId: string) => {
 
-    const stockCount = await prismadb.product.count({
+    const products = await prismadb.product.findMany({
         where: {
             storeId,
-            isArchived: false
         },
     });
+
+    const stockCount = products.reduce((total, product) => {
+        return total + Number(product.quantity);
+    }, 0)
 
     return stockCount;
 }
@@ -77,7 +80,7 @@ export const getGraphData = async (storeId: string) => {
         let revenueForOrder = 0;
 
         for( const item of order.orderItems){
-            revenueForOrder += item.product.price.toNumber();
+            revenueForOrder += item.product.price;
         }
 
         monthlyRevenue[month] = (monthlyRevenue[month] || 0) + revenueForOrder;

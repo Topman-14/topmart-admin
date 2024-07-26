@@ -8,5 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 export const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: 'currency',
   currency: 'NGN',
-  currencyDisplay: 'symbol'
+  currencyDisplay: 'symbol',
+  maximumFractionDigits: 0
+
 });
