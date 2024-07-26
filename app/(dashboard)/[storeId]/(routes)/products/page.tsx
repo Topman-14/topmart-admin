@@ -4,6 +4,8 @@ import { ProductClient } from "./components/client"
 import { ProductColumn } from "./components/columns"
 import { currencyFormatter } from "@/lib/utils"
 
+export const revalidate = 300
+
 const ProductsPage = async ({ params }: {
   params: { storeId: string }
 }) => {

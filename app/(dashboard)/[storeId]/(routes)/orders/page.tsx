@@ -4,6 +4,8 @@ import { OrderClient } from "./components/client"
 import { OrderColumn } from "./components/columns"
 import { currencyFormatter } from "@/lib/utils"
 
+export const revalidate = 300
+
 const OrdersPage = async ({ params }: {
   params: { storeId: string }
 }) => {
@@ -24,8 +26,6 @@ const OrdersPage = async ({ params }: {
       createdAt: 'desc'
     }
   })
-
-  console.log(orders)
 
   const formattedOrders: OrderColumn[] = orders.map((item) => ({
     id: item.id,

@@ -14,11 +14,31 @@ export async function POST(
         const { products, metadata } = await req.json()
 
         if (!products || products.length === 0) {
-            return new NextResponse("Product Ids are required", { status: 400 })
+            return new NextResponse("Product Ids are required", { status: 400, headers: corsHeaders });
         }
 
         if (!params.storeId) {
-            return new NextResponse('Store ID is required', { status: 400 });
+            return new NextResponse('Store ID is required', { status: 400, headers: corsHeaders });
+        }
+
+        const allProducts = await prismadb.product.findMany({
+            where: {
+                id: {
+                    in: products.map((product: { id: string }) => product.id)
+                }
+            }
+        });
+
+        for (const product of products) {
+            const foundProduct = allProducts.find((p) => p.id === product.id);
+
+            if (!foundProduct) {
+                return new NextResponse(`A product does not exist`, { status: 404, headers: corsHeaders });
+            }
+
+            if (foundProduct.quantity < product.quantity) {
+                return new NextResponse(`${foundProduct.name} is out of stock`, { status: 400, headers: corsHeaders });
+            }
         }
 
         const order = await prismadb.order.create({
