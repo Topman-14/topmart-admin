@@ -4,11 +4,15 @@ import Heading from "@/components/ui/heading"
 import { Separator } from "@/components/ui/separator"
 import { currencyFormatter } from "@/lib/utils"
 import { getGraphData, getSalesCount, getStockCount, getTotalRevenue } from "@/services/dashService"
-import { CreditCard, HandCoins, Package } from "lucide-react"
+import { CreditCard, HandCoins, Link2, LinkIcon, Package } from "lucide-react"
+import { raleway } from "@/fonts"
+import Link from "next/link"
 
 interface DashboardPageProps {
     params: { storeId: string }
 };
+
+const storeUrl = process.env.FRONTEND_STORE_URL as string;
 
 const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
 
@@ -20,7 +24,18 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
     return (
         <div className="flex-col flex">
             <div className="flex-1 space-y-4 p-8 pt-6">
-                <Heading title={"Dashboard"} description={"Overview of your store"} />
+                <div className="flex items-center gap-1 justify-between">
+                    <div>
+                        <h2 className={`text-3xl font-bold ${raleway.className}`}>Dashboard</h2>
+                        <p className="text-sm text-muted-foreground">Overview of your store</p>
+                    </div>
+                    <div>
+                        <Link href={storeUrl} className="rounded-full bg-[#9e9e9e40] px-3 py-2 text-sm items-center gap-1 flex font-semibold" >
+                            <LinkIcon className="size-4 text-muted-foreground"/>
+                            <p>Go to storefront</p>
+                        </Link>
+                    </div>
+                </div>
                 <Separator />
                 <div className="grid gap-4 grid-cols-3">
                     <Card>
