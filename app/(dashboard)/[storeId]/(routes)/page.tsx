@@ -30,7 +30,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async ({ params }) => {
                         <p className="text-sm text-muted-foreground">Overview of your store</p>
                     </div>
                     <div>
-                        <Link href={storeUrl} className="rounded-full bg-[#9e9e9e40] px-3 py-2 text-sm items-center gap-1 flex font-semibold" >
+                        <Link href={storeUrl} target="_blank" className="rounded-full bg-[#9e9e9e40] px-3 py-2 text-sm items-center gap-1 flex font-semibold" >
                             <LinkIcon className="size-4 text-muted-foreground"/>
                             <p>Go to storefront</p>
                         </Link>
