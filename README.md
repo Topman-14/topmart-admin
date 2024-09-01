@@ -1,22 +1,14 @@
 # TopMart-Admin
 
-TopMart-Admin is the repository for the admin dashboard component of a feature-rich multi-vendor marketplace project i'm building with Nexjs. fin out more info on the storefront repo here: https://github.com/Topman-14/topmart-client
+![image](https://github.com/user-attachments/assets/84cbf318-f602-4161-8949-8a735af50008)
 
-### Features
-- **User Management**: Easily manage vendors and customers.
-- **Product Management**: Efficiently handle product listings and updates.
-- **Order Management**: Streamline order processing and tracking.
-- **Analytics Dashboard**: Gain insights with comprehensive analytics tools.
+TopMart-Admin is the repository for the admin dashboard component of a feature-rich multi-vendor marketplace project i'm building with Nexjs. find out more info on the storefront repo here: https://github.com/Topman-14/topmart-client
 
 ## Installation
 1. Clone the repository.
 2. Install dependencies using `npm install`.
 3. Run the development server with `npm run dev`.
 
-## Usage
-1. Access the admin dashboard through the provided URL.
-2. Use the intuitive interface to manage products, and orders.
-3. Leverage the analytics dashboard for valuable insights.
 
 ## Contributing
 Contributions are welcome! Feel free to open an issue or submit a pull request.
